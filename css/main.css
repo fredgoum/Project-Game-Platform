@@ -1,95 +1,96 @@
-
-body {
-    display: none;
+body{
+  background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/18515/PIA09959-1280x800_copy.jpg);
+  display: none;
 }
 h1 {
-    text-align: center;
+  color: white;
+  text-align: center;
 }
 .btn_reload {
-    height: 35px;
-    display: flex;
-    margin: auto;
-    margin-bottom: 20px;
-    justify-content: center;
+  height: 35px;
+  display: flex;
+  margin: auto;
+  margin-bottom: 20px;
+  justify-content: center;
 }
 .game_interface {
-    display:flex;
-    justify-content:center;
-    margin-bottom: 20px;
+  display:flex;
+  justify-content:center;
+  margin-bottom: 20px;
 }
 #first-player-dashboard, #second-player-dashboard {
-    width: 160px;
-    padding: 10px;
-    background: #909090;
+  width: 160px;
+  padding: 10px;
+  background:whitesmoke;
 }
 #first-player-dashboard {
-    margin-right: 3%;
+  margin-right: 3%;
 }
 #second-player-dashboard {
-    margin-left: 3%;
+  margin-left: 3%;
 }
 #player_img_container {
-    display:flex;
+  display:flex;
 }
 .first-player {
-    filter:hue-rotate(-120deg); /* Pour appliquer une rotation de teinte sur l'image */
-    width: 100%;
+  filter:hue-rotate(-120deg); /* To apply a hue rotation to the image */
+  width: 100%;
 }
 .second-player {
-    width: 100%;
+  width: 100%;
 }
 #players_btns {
-    margin-top: 5px; 
-    margin-bottom: 15px; 
-    height: 20px;
+  margin-top: 5px; 
+  margin-bottom: 15px; 
+  height: 20px;
 }
 #first-player-attack, #second-player-attack {
-    background-color: blue;
+  background-color: blue;
 }
 #first-player-defend, #second-player-defend {
-    background-color: red;
+  background-color: red;
 }
 #first-player-weapon, #second-player-weapon {
-    display:flex; 
-    flex-flow: column wrap; 
-    height: 160px;
+  display:flex; 
+  flex-flow: column wrap; 
+  height: 160px;
 }
 #first-player-weapon-image, #second-player-weapon-image{
-    width: 140px; 
-    height: 90px;
+  width: 140px; 
+  height: 90px;
 }
 table {
-    border-collapse:collapse;
-    table-layout:fixed;
+  border-collapse:collapse;
+  table-layout:fixed;
 }
 td {
-    background-image:url("../img/grid.jpg");
-    height:50px;
-    width:50px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    text-align: center; /* Pour centrer les images de joueurs et armes dans les cases */
+  background-image:url("../img/grid.jpg");
+  height:50px;
+  width:50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  text-align: center; /* To center players and weapons images in grids */
 }
 .gray {
-    filter:invert(80%);
+  filter:invert(80%);
 }
 .img_arme, .first-player, .second-player {
-    width:80%;
-    height:80%;
+  width:80%;
+  height:80%;
 }
 .move_possible {
-    filter:invert(30%);
+  filter:invert(30%);
 }
 .move_possible:hover {
-    filter:invert(40%);
+  filter:invert(40%);
 }
 
-/* Affichage sur petit ecran (mobile, tablet, etc.) */
+/* Small screen display (mobile, tablet, etc.) */
 @media screen and (max-width: 880px) {  
-    .game_interface {
-        display: block;
-    }
-    table {
-        margin: 10px auto;
-    }
+  .game_interface {
+    display: block;
+  }
+  table {
+    margin: 10px auto;
+  }
 }

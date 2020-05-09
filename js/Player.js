@@ -1,97 +1,93 @@
-
-/* Cette classe gere les joueurs */ 
-
 class Player {
-    constructor(name) {
-        this.name = name;         // Nom du joueur
-        this.order = "";          // Determine si c'est le premier ou le second joueur
-        this.weapon = {};         // Arme actuelle du joueur
-        this.oldWeapon = {};      // Ancienne arme du joueur
-        this.position = [];       // Position du joueur
-        this.oldPosition = [];    // Ancienne position du joueur
-        this.fight = '';          // Dis si le joueur a attaqué ou defendu lors d'un tour de combat
-        this.lifePoints = 100;    // Points de vie du joueur
-        this.enemy = {};           
+  constructor(name) {
+    this.name = name;
+    this.weapon = {};
+    this.oldWeapon = {};
+    this.position = [];
+    this.oldPosition = [];
+    this.enemy = {};
+    this.lifePoints = 100;
+    this.order = ''; // Determine if it is the first or second player
+    this.fight = ''; // Defined if player attacked or defended during a combat turn
+  }
+
+  /**
+   * Allows to display attack and defend buttons of the player in his dashboard
+   * @param {Object} player is current player
+   */
+  displayButtons(player) {
+    const attackButton = $(`#${player.order}-attack`);
+    const defendButton = $(`#${player.order}-defend`);
+    attackButton.show();
+    defendButton.show();
+
+    const that = this;
+    attackButton.on('click', (event) => {
+      event.stopImmediatePropagation();
+      attackButton.hide();
+      defendButton.hide();
+
+      player.fight = 'attack'; // To specify that the player attacked
+      that.caluculateLifePoints(player);
+
+      const nextPlayer = player.enemy;
+      that.displayButtons(nextPlayer);
+    });
+    defendButton.on('click', (e) => {
+      event.stopImmediatePropagation();
+      attackButton.hide();
+      defendButton.hide();
+
+      player.fight = 'defend'; // To specify that the player defended
+
+      const nextPlayer = player.enemy;
+      that.displayButtons(nextPlayer);
+    });
+  }
+
+  /**
+   * Calculates the remaining life points of the players
+   * @param {Object} player is current player
+   */
+  caluculateLifePoints(player) {
+    let points = 100;
+    if (player.enemy.fight === 'defend') { // If the enemy defends he takes 50% of the player's damages
+      points = Math.abs(player.enemy.lifePoints - (player.weapon.damage / 2));
+    } else { // Otherwise he takes 100% of damages
+      points = Math.abs(player.enemy.lifePoints - player.weapon.damage);
     }
-
-    /**
-     * Permet d'afficher les boutons attaquer et defendre du joueur dans son tableau de bord
-     * @param {Object} player correspond au joueur
-     */
-    displayButtons(player) { 
-        const attackButton = $(`#${player.order}-attack`);
-        const defendButton = $(`#${player.order}-defend`);
-        attackButton.show();
-        defendButton.show();
-
-        let that = this;
-        attackButton.on('click', function(event) {
-            event.stopImmediatePropagation(); // Pour empecher la propagation de l'event
-            attackButton.hide();
-            defendButton.hide();
-
-            player.fight = 'attack'; // Pour specifier que le joueur a attaque
-            that.caluculateLifePoints(player);
-
-            const nextPlayer = player.enemy;
-            that.displayButtons(nextPlayer); // C'est au tour du prochain joueur d'attaquer ou de defendre
-        });
-        defendButton.on('click', function(e) {
-            event.stopImmediatePropagation(); // Pour empecher la propagation de l'event
-            attackButton.hide();
-            defendButton.hide();
-
-            player.fight = 'defend';   // Pour specifier que le joueur a defendu
-
-            const nextPlayer = player.enemy;
-            that.displayButtons(nextPlayer); // C'est au tour du prochain joueur d'attaquer ou de defendre
-        });
+    if (player.enemy.lifePoints < player.weapon.damage) {
+      points = 0;
     }
+    player.enemy.lifePoints = points;
+    this.updateLifeBar(player.enemy);
+  }
 
-    /**
-     * Calcul les points de vie restant des joueurs
-     * @param {Object} player correspond au joueur actuel
-     */
-    caluculateLifePoints(player) {
-        let points = 100;
-        if (player.enemy.fight === 'defend') {  // Si l'ennemi se defend alors il encaisse 50% des degats du joueur
-            points = Math.abs(player.enemy.lifePoints - (player.weapon.damage / 2));
-        } else {  // Sinon il encaisse 100% des degats
-            points = Math.abs(player.enemy.lifePoints - player.weapon.damage);
-        }
-        if (player.enemy.lifePoints < player.weapon.damage) {
-            points = 0;
-        }
-        player.enemy.lifePoints = points;
-        
-        this.updateLifeBar(player.enemy); // On met a jour les points de vie et la barre de vie de l'ennemi
+  /**
+   * Updates player's life points and life bar
+   * @param {Object} player is attacked player
+   */
+  updateLifeBar(player) {
+    $(`#${player.order}-lifebar`).html(`${player.lifePoints}%`);
+    $(`#${player.order}-lifebar`).css('width', `${player.lifePoints}%`);
+
+    if (player.lifePoints == 0) { // When a player's life points drop to 0..
+      this.gameOver(player); // ..display winner and game over
     }
+  }
 
-    /**
-     * Met a jour les points de vie et la barre de vie des joueurs
-     * @param {Object} player correspond au joueur attaque
-     */
-    updateLifeBar(player) {
-        $(`#${player.order}-lifebar`).html(player.lifePoints + '%');
-        $(`#${player.order}-lifebar`).css("width", player.lifePoints + '%');
+  /**
+   * Indicates that the game is over and displays the winner's name
+   * @param {Obeject} player is the player who dies
+   */
+  gameOver(player) {
+    const winnerPlayer = player.enemy;
 
-        if (player.lifePoints == 0) { // Lorsque les points de vie d'un joueur tombent a 0 ..
-            this.gameOver(player); //.. on affiche un message et la partie est terminee
-        }
-    }
-    
-    /**
-     * Affiche le nom du joueur qui a remporte la partie et indique que la partie est terminee
-     * @param {Obeject} player est le joueur qui meurt
-     */
-    gameOver(player) {
-        const winnerPlayer = player.enemy; 
+    const gameOver = '<b>GAME OVER</b></br></br></br>';
+    const winner = `<b>Nice fight ${winnerPlayer.name}<b></br></br></br>`;
+    const thanks = '<b><i>Thank you for playing</i><b>';
 
-        const gameOver = "<b>GAME OVER</b></br></br></br>";
-        const winner = "Nice fight " + winnerPlayer.name  + "</br></br></br>";
-        const thanks = "<i>Thank you for playing</i>";
-        
-        $('#battle_title').hide();
-        $('.game_interface').html("<p style='text-align: center;'>" + gameOver + winner + thanks + "</p>");
-    }
+    $('#battle_title').hide();
+    $('.game_interface').html(`<p style='text-align: center; color: white'>${gameOver}${winner}${thanks}</p>`);
+  }
 }
