@@ -240,7 +240,7 @@ class Map {
     playerImage.attr('src', 'img/player.jpg');
     playerImage.addClass(currentPlayer.order); // Class allowing the change of color
 
-    if (oldGrid.html().slice(-10).includes('player')) { // Frees old grid of player
+    if (oldGrid.html().includes('player')) { // Frees old grid of player
       oldGrid.html('');
       const x = currentPlayer.oldPosition[0];
       const y = currentPlayer.oldPosition[1];
